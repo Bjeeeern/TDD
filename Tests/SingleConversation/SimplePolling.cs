@@ -1,13 +1,13 @@
 using System;
 using Xunit;
 
-namespace Tests.SingleChatClient;
+namespace Tests.SingleConversation;
 
-public class SimpleTests
+public class SimplePolling
 {
     private readonly Conversation _conversation;
 
-    public SimpleTests()
+    public SimplePolling()
     {
         _conversation = new Conversation();
     }
