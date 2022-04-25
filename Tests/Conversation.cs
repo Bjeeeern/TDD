@@ -4,13 +4,16 @@ using System.Linq;
 
 namespace Tests;
 
-public class ChatClient
+public class Conversation
 {
     private readonly SortedList<DateTime, Message> _messages = new();
 
     public IEnumerable<Message> PollMessages(int limit)
     {
-        return _messages.Select(x => x.Value).Take(limit).AsEnumerable();
+        return _messages
+            .Select(x => x.Value)
+            .Take(limit)
+            .AsEnumerable();
     }
 
     public void ReceiveMessage(Message content)
