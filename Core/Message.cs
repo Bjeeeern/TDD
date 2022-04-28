@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Tests;
+﻿namespace Core;
 
 public class Message
 {

@@ -2,6 +2,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{8AF0A10D-72C0-4450-8C14-8422A3B1CDCB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWasm", "BlazorWasm\BlazorWasm.csproj", "{7ED2D639-10C5-4106-A587-B7749DA91363}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{B7236170-46FF-4405-9BA3-3CBBDF26437E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +16,13 @@ Global
 		{8AF0A10D-72C0-4450-8C14-8422A3B1CDCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8AF0A10D-72C0-4450-8C14-8422A3B1CDCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8AF0A10D-72C0-4450-8C14-8422A3B1CDCB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7ED2D639-10C5-4106-A587-B7749DA91363}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7ED2D639-10C5-4106-A587-B7749DA91363}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7ED2D639-10C5-4106-A587-B7749DA91363}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7ED2D639-10C5-4106-A587-B7749DA91363}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7236170-46FF-4405-9BA3-3CBBDF26437E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7236170-46FF-4405-9BA3-3CBBDF26437E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7236170-46FF-4405-9BA3-3CBBDF26437E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7236170-46FF-4405-9BA3-3CBBDF26437E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Linq;
+using Core;
 using Tests.Utilities;
 using Xunit;
 
-namespace Tests.SingleConversation;
+namespace Tests;
 
 public class Offline
 {

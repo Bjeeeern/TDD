@@ -1,7 +1,8 @@
 using System;
+using Core;
 using Xunit;
 
-namespace Tests.SingleConversation;
+namespace Tests;
 
 public class SimplePolling
 {
