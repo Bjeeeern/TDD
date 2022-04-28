@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Xunit;
 
-namespace Tests;
+namespace Tests.TestSuites;
 
 public class GatewayTests
 {

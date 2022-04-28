@@ -4,7 +4,7 @@ using Core;
 using Tests.Utilities;
 using Xunit;
 
-namespace Tests;
+namespace Tests.TestSuites;
 
 public class Offline
 {

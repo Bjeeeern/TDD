@@ -2,7 +2,7 @@ using System;
 using Core;
 using Xunit;
 
-namespace Tests;
+namespace Tests.TestSuites;
 
 public class SimplePolling
 {
