@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using Tests.Utilities;
 using Xunit;
 
 namespace Tests.TestSuites;
 
-public class GatewayTests
+public class GatewayTests : AssertExtentions
 {
     [Fact]
     public void Gateways_CanConnect()
@@ -14,8 +15,8 @@ public class GatewayTests
         var invite = there.GetInvitation();
         here.TryInvitation(invite);
 
-        Assert.Contains("Bob", here.ConnectedPeers);
-        Assert.Contains("Alice", there.ConnectedPeers);
+        Contains("Bob", here.ConnectedPeers);
+        Contains("Alice", there.ConnectedPeers);
     }
 }
 

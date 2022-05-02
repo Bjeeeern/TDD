@@ -1,10 +1,11 @@
 using System;
 using Core;
+using Tests.Utilities;
 using Xunit;
 
 namespace Tests.TestSuites;
 
-public class SimplePolling
+public class SimplePolling : AssertExtentions
 {
     private readonly Conversation _conversation;
 
@@ -18,7 +19,7 @@ public class SimplePolling
     {
         var messages = _conversation.PollMessages(1);
 
-        Assert.Empty(messages);
+        Empty(messages);
     }
 
     [Fact]
@@ -26,7 +27,7 @@ public class SimplePolling
     {
         var messages = _conversation.PollMessages(0);
 
-        Assert.Empty(messages);
+        Empty(messages);
     }
 
     [Fact]
@@ -34,7 +35,7 @@ public class SimplePolling
     {
         var messages = _conversation.PollMessages(-1);
 
-        Assert.Empty(messages);
+        Empty(messages);
     }
 
     [Fact]
@@ -46,7 +47,7 @@ public class SimplePolling
 
         var messages = _conversation.PollMessages(1);
 
-        Assert.Single(messages);
-        Assert.Contains(greeting, messages);
+        Single(messages);
+        Contains(greeting, messages);
     }
 }

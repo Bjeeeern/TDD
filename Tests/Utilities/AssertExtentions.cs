@@ -4,10 +4,10 @@ using Xunit;
 
 namespace Tests.Utilities;
 
-public static class AssertX
+public class AssertExtentions : Assert
 {
     public static void Length<T>(int expected, IEnumerable<T> enumerable)
     {
-        Assert.Equal(expected, enumerable.Count());
+        Equal(expected, enumerable.Count());
     }
 }

@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Tests.TestSuites;
 
-public class Offline
+public class Offline : AssertExtentions
 {
     private readonly Conversation _conversation;
     private readonly Message _greeting;
@@ -35,9 +35,9 @@ public class Offline
 
         var messages = _conversation.PollMessages(2);
 
-        AssertX.Length(2, messages);
-        Assert.Contains(_greeting, messages);
-        Assert.Contains(_question, messages);
+        Length(2, messages);
+        Contains(_greeting, messages);
+        Contains(_question, messages);
     }
 
     [Fact]
@@ -48,8 +48,8 @@ public class Offline
 
         var messages = _conversation.PollMessages(2);
 
-        Assert.Equal(_greeting, messages.First());
-        Assert.Equal(_question, messages.Skip(1).First());
+        Equal(_greeting, messages.First());
+        Equal(_question, messages.Skip(1).First());
     }
 
     [Fact]
@@ -60,8 +60,8 @@ public class Offline
 
         var messages = _conversation.PollMessages(1);
 
-        Assert.Single(messages);
-        Assert.Contains(_greeting, messages);
+        Single(messages);
+        Contains(_greeting, messages);
     }
 
     [Fact]
@@ -72,8 +72,8 @@ public class Offline
 
         var messages = _conversation.PollMessages(3);
 
-        AssertX.Length(2, messages);
-        Assert.Contains(_greeting, messages);
-        Assert.Contains(_question, messages);
+        Length(2, messages);
+        Contains(_greeting, messages);
+        Contains(_question, messages);
     }
 }
