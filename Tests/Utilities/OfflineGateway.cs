@@ -1,24 +1,7 @@
 ﻿using System.Collections.Generic;
-using Tests.Utilities;
-using Xunit;
+using Core;
 
-namespace Tests.TestSuites;
-
-public class GatewayTests : AssertExtentions
-{
-    [Fact]
-    public void Gateways_CanConnect()
-    {
-        IGateway here = new OfflineGateway("Alice");
-        IGateway there = new OfflineGateway("Bob");
-
-        var invite = there.GetInvitation();
-        here.TryInvitation(invite);
-
-        Contains("Bob", here.ConnectedPeers);
-        Contains("Alice", there.ConnectedPeers);
-    }
-}
+namespace Tests.Utilities;
 
 public class OfflineGateway : IGateway
 {
@@ -51,11 +34,4 @@ public class OfflineGateway : IGateway
     {
         _peers.Add(peerOwner);
     }
-}
-
-public interface IGateway
-{
-    IEnumerable<string> ConnectedPeers { get; }
-    string GetInvitation();
-    void TryInvitation(string invite);
 }

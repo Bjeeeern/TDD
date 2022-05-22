@@ -1,11 +1,11 @@
 ﻿namespace Server;
 
-public class ServerFactory : IAsyncDisposable
+public class WebApp : IAsyncDisposable
 {
     private readonly WebApplication _app;
     private readonly CancellationToken _token;
 
-    private ServerFactory(WebApplicationOptions options)
+    private WebApp(WebApplicationOptions options)
     {
         _token = new CancellationToken();
 
@@ -21,9 +21,9 @@ public class ServerFactory : IAsyncDisposable
         await _app.StopAsync(_token);
     }
 
-    public static async Task<ServerFactory> RunWithOptions(WebApplicationOptions options)
+    public static async Task<WebApp> RunWithOptions(WebApplicationOptions options)
     {
-        var server = new ServerFactory(options);
+        var server = new WebApp(options);
         await server.Start();
         return server;
     }
