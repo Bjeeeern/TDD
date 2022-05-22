@@ -1,47 +1,50 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Playwright;
 using Server;
+using Tests.Utilities;
 using Xunit;
 
 namespace Tests.TestSuites.Experiments;
 
-public class Playwright
+public class Playwright : IAsyncLifetime
 {
-    [Fact]
-    public async Task Server_CanStart()
+    private IBrowser _browser = null!;
+    private IPlaywright _playwright = null!;
+    private WebApp _server = null!;
+
+    public async Task InitializeAsync()
     {
-        await using var server = await WebApp.RunWithOptions(new WebApplicationOptions
+        _server = await WebApp.RunWithOptions(new WebApplicationOptions
         {
             ApplicationName = "Server",
             EnvironmentName = "Development",
-            ContentRootPath = @"C:\Users\bjeee\RiderProjects\TDD\Server\",
-            WebRootPath = @"C:\Users\bjeee\RiderProjects\TDD\Server\wwwroot\"
+            ContentRootPath = CommonPaths.ServerProject(),
+            WebRootPath = CommonPaths.ServerWebRoot()
         });
+
+        _playwright = await Microsoft.Playwright.Playwright.CreateAsync();
+        _browser = await _playwright.Chromium.LaunchAsync();
+    }
+
+    public async Task DisposeAsync()
+    {
+        await _server.DisposeAsync();
+        await _browser.DisposeAsync();
+        _playwright.Dispose();
     }
 
     [Fact]
-    public async Task Playwright_CanLaunchChromiumBrowserAndContextAndPage()
+    public async Task CanLaunchTheChromiumBrowserAndCreateAContextAndAPage()
     {
-        using var playwright = await Microsoft.Playwright.Playwright.CreateAsync();
-        await using var browser = await playwright.Chromium.LaunchAsync();
-        await using var context = await browser.NewContextAsync();
+        await using var context = await _browser.NewContextAsync();
         await context.NewPageAsync();
     }
 
     [Fact]
-    public async Task Server_ReturnsIndexPage()
+    public async Task CanVisitTheServerIndexPage()
     {
-        await using var server = await WebApp.RunWithOptions(new WebApplicationOptions
-        {
-            ApplicationName = "Server",
-            EnvironmentName = "Development",
-            ContentRootPath = @"C:\Users\bjeee\RiderProjects\TDD\Server\",
-            WebRootPath = @"C:\Users\bjeee\RiderProjects\TDD\Server\wwwroot\"
-        });
-
-        using var playwright = await Microsoft.Playwright.Playwright.CreateAsync();
-        await using var browser = await playwright.Chromium.LaunchAsync();
-        await using var context = await browser.NewContextAsync();
+        await using var context = await _browser.NewContextAsync();
         var page = await context.NewPageAsync();
 
         var result = await page.GotoAsync("https://localhost:5001");
@@ -50,19 +53,9 @@ public class Playwright
     }
 
     [Fact]
-    public async Task IndexPage_HasElement()
+    public async Task CanFindAParagraphOnTheIndexPage()
     {
-        await using var server = await WebApp.RunWithOptions(new WebApplicationOptions
-        {
-            ApplicationName = "Server",
-            EnvironmentName = "Development",
-            ContentRootPath = @"C:\Users\bjeee\RiderProjects\TDD\Server\",
-            WebRootPath = @"C:\Users\bjeee\RiderProjects\TDD\Server\wwwroot\"
-        });
-
-        using var playwright = await Microsoft.Playwright.Playwright.CreateAsync();
-        await using var browser = await playwright.Chromium.LaunchAsync();
-        await using var context = await browser.NewContextAsync();
+        await using var context = await _browser.NewContextAsync();
         var page = await context.NewPageAsync();
 
         await page.GotoAsync("https://localhost:5001");
