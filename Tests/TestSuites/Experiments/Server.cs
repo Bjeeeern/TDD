@@ -11,12 +11,13 @@ public class Server
     [Fact]
     public async Task CanStartAndShutDown()
     {
-        await using var server = await WebApp.RunWithOptions(new WebApplicationOptions
+        await using var server = await WebApplicationRunner.RunWithOptions(new WebApplicationOptions
         {
             ApplicationName = "Server",
             EnvironmentName = "Development",
             ContentRootPath = CommonPaths.ServerProject(),
-            WebRootPath = CommonPaths.ServerWebRoot()
+            WebRootPath = CommonPaths.ServerWebRoot(),
+            Args = new[] {"--urls", "https://127.0.0.1:0;http://127.0.0.1:0"}
         });
     }
 }

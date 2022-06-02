@@ -1,4 +1,4 @@
 using Server;
 
-var server = await WebApp.RunWithOptions(new WebApplicationOptions());
+var server = await WebApplicationRunner.RunWithOptions(new WebApplicationOptions {Args = args});
 server.BlockUntilShutdown();

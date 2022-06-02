@@ -11,16 +11,17 @@ public class Playwright : IAsyncLifetime
 {
     private IBrowser _browser = null!;
     private IPlaywright _playwright = null!;
-    private WebApp _server = null!;
+    private WebApplicationRunner _server = null!;
 
     public async Task InitializeAsync()
     {
-        _server = await WebApp.RunWithOptions(new WebApplicationOptions
+        _server = await WebApplicationRunner.RunWithOptions(new WebApplicationOptions
         {
             ApplicationName = "Server",
             EnvironmentName = "Development",
             ContentRootPath = CommonPaths.ServerProject(),
-            WebRootPath = CommonPaths.ServerWebRoot()
+            WebRootPath = CommonPaths.ServerWebRoot(),
+            Args = new[] {"--urls", "https://127.0.0.1:0;http://127.0.0.1:0"}
         });
 
         _playwright = await Microsoft.Playwright.Playwright.CreateAsync();
@@ -47,7 +48,8 @@ public class Playwright : IAsyncLifetime
         await using var context = await _browser.NewContextAsync();
         var page = await context.NewPageAsync();
 
-        var result = await page.GotoAsync("https://localhost:5001");
+        var trustedUri = _server.HttpsUri.Replace("127.0.0.1", "localhost");
+        var result = await page.GotoAsync(trustedUri);
         Assert.NotNull(result);
         Assert.True(result.Ok);
     }
@@ -58,7 +60,8 @@ public class Playwright : IAsyncLifetime
         await using var context = await _browser.NewContextAsync();
         var page = await context.NewPageAsync();
 
-        await page.GotoAsync("https://localhost:5001");
+        var trustedUri = _server.HttpsUri.Replace("127.0.0.1", "localhost");
+        await page.GotoAsync(trustedUri);
 
         Assert.True(await page.IsVisibleAsync("p"));
         Assert.Equal("Hello World!", await page.InnerTextAsync("p"));
