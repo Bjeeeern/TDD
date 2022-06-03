@@ -1,8 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Playwright;
 using Server;
-using Tests.Utilities;
 using Xunit;
 
 namespace Tests.TestSuites.Experiments;
@@ -19,8 +19,6 @@ public class Playwright : IAsyncLifetime
         {
             ApplicationName = "Server",
             EnvironmentName = "Development",
-            ContentRootPath = CommonPaths.ServerProject(),
-            WebRootPath = CommonPaths.ServerWebRoot(),
             Args = new[] {"--urls", "https://127.0.0.1:0;http://127.0.0.1:0"}
         });
 
@@ -50,6 +48,7 @@ public class Playwright : IAsyncLifetime
 
         var trustedUri = _server.HttpsUri.Replace("127.0.0.1", "localhost");
         var result = await page.GotoAsync(trustedUri);
+
         Assert.NotNull(result);
         Assert.True(result.Ok);
     }
@@ -62,8 +61,15 @@ public class Playwright : IAsyncLifetime
 
         var trustedUri = _server.HttpsUri.Replace("127.0.0.1", "localhost");
         await page.GotoAsync(trustedUri);
+        await page.WaitForSelectorAsync("main");
 
         Assert.True(await page.IsVisibleAsync("p"));
         Assert.Equal("Hello World!", await page.InnerTextAsync("p"));
+    }
+
+    [Fact]
+    public void CanNavigateToNonIndexPageAndRefresh()
+    {
+        throw new NotImplementedException();
     }
 }

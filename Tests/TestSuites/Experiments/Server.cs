@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Server;
-using Tests.Utilities;
 using Xunit;
 
 namespace Tests.TestSuites.Experiments;
@@ -15,8 +14,6 @@ public class Server
         {
             ApplicationName = "Server",
             EnvironmentName = "Development",
-            ContentRootPath = CommonPaths.ServerProject(),
-            WebRootPath = CommonPaths.ServerWebRoot(),
             Args = new[] {"--urls", "https://127.0.0.1:0;http://127.0.0.1:0"}
         });
     }

@@ -1,4 +1,6 @@
-﻿namespace Server;
+﻿using Microsoft.AspNetCore.StaticFiles;
+
+namespace Server;
 
 public class WebApplicationRunner : IAsyncDisposable
 {
@@ -7,10 +9,13 @@ public class WebApplicationRunner : IAsyncDisposable
     private WebApplicationRunner(WebApplicationOptions options)
     {
         var builder = WebApplication.CreateBuilder(options);
-        _app = builder.Build();
 
+        _app = builder.Build();
         _app.UseDefaultFiles();
-        _app.UseStaticFiles();
+        _app.UseStaticFiles(new StaticFileOptions
+        {
+            ContentTypeProvider = ProvideAdditionalAllowedFileExtentions()
+        });
     }
 
     public string HttpsUri => _app.Urls.First(uri => uri.Contains("https"));
@@ -18,6 +23,20 @@ public class WebApplicationRunner : IAsyncDisposable
     public async ValueTask DisposeAsync()
     {
         await _app.StopAsync();
+    }
+
+    private IContentTypeProvider ProvideAdditionalAllowedFileExtentions()
+    {
+        var provider = new FileExtensionContentTypeProvider();
+
+        provider.Mappings[".dll"] = "application/dll";
+#if DEBUG
+        provider.Mappings[".pdb"] = "application/pdb";
+        provider.Mappings[".blat"] = "application/blat";
+        provider.Mappings[".dat"] = "application/dat";
+#endif //DEBUG
+
+        return provider;
     }
 
     public static async Task<WebApplicationRunner> RunWithOptions(WebApplicationOptions options)
