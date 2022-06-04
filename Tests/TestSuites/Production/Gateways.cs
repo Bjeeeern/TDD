@@ -1,5 +1,5 @@
 ﻿using Core;
-using Tests.Utilities;
+using Tests.Utilities.Mocks;
 using Xunit;
 
 namespace Tests.TestSuites.Production;

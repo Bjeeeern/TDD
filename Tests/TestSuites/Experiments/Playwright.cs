@@ -1,75 +1,52 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using System.Threading.Tasks;
 using Microsoft.Playwright;
 using Server;
+using Tests.Utilities.Fixtures;
 using Xunit;
 
 namespace Tests.TestSuites.Experiments;
 
-public class Playwright : IAsyncLifetime
+public class Playwright : IClassFixture<ServerClientFixture>
 {
-    private IBrowser _browser = null!;
-    private IPlaywright _playwright = null!;
-    private WebApplicationRunner _server = null!;
+    private readonly IPage _page;
+    private readonly WebApplicationRunner _server;
 
-    public async Task InitializeAsync()
+    public Playwright(ServerClientFixture fixture)
     {
-        _server = await WebApplicationRunner.RunWithOptions(new WebApplicationOptions
-        {
-            ApplicationName = "Server",
-            EnvironmentName = "Development",
-            Args = new[] {"--urls", "https://127.0.0.1:0;http://127.0.0.1:0"}
-        });
-
-        _playwright = await Microsoft.Playwright.Playwright.CreateAsync();
-        _browser = await _playwright.Chromium.LaunchAsync();
+        _page = fixture.Page;
+        _server = fixture.Server;
     }
 
-    public async Task DisposeAsync()
-    {
-        await _server.DisposeAsync();
-        await _browser.DisposeAsync();
-        _playwright.Dispose();
-    }
-
-    [Fact]
-    public async Task CanLaunchTheChromiumBrowserAndCreateAContextAndAPage()
-    {
-        await using var context = await _browser.NewContextAsync();
-        await context.NewPageAsync();
-    }
+    private string CertifiedServerUri => _server.HttpsUri.Replace("127.0.0.1", "localhost");
 
     [Fact]
     public async Task CanVisitTheServerIndexPage()
     {
-        await using var context = await _browser.NewContextAsync();
-        var page = await context.NewPageAsync();
+        var result = await _page.GotoAsync(CertifiedServerUri);
 
-        var trustedUri = _server.HttpsUri.Replace("127.0.0.1", "localhost");
-        var result = await page.GotoAsync(trustedUri);
-
-        Assert.NotNull(result);
-        Assert.True(result.Ok);
+        Assert.Equal(200, result.Status);
     }
 
     [Fact]
     public async Task CanFindAParagraphOnTheIndexPage()
     {
-        await using var context = await _browser.NewContextAsync();
-        var page = await context.NewPageAsync();
+        await _page.GotoAsync(CertifiedServerUri);
+        await _page.WaitForSelectorAsync("main");
 
-        var trustedUri = _server.HttpsUri.Replace("127.0.0.1", "localhost");
-        await page.GotoAsync(trustedUri);
-        await page.WaitForSelectorAsync("main");
-
-        Assert.True(await page.IsVisibleAsync("p"));
-        Assert.Equal("Hello World!", await page.InnerTextAsync("p"));
+        Assert.True(await _page.IsVisibleAsync("p"));
+        Assert.Equal("Hello World!", await _page.InnerTextAsync("p"));
     }
 
     [Fact]
-    public void CanNavigateToNonIndexPageAndRefresh()
+    public async Task CanNavigateToNonIndexPageAndRefresh()
     {
-        throw new NotImplementedException();
+        await _page.GotoAsync(CertifiedServerUri);
+        await _page.ClickAsync("button#about");
+
+        Assert.Contains("/about", _page.Url.ToLower());
+
+        var result = await _page.ReloadAsync();
+
+        Assert.Equal(200, result.Status);
     }
 }

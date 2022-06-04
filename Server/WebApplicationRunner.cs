@@ -16,6 +16,9 @@ public class WebApplicationRunner : IAsyncDisposable
         {
             ContentTypeProvider = ProvideAdditionalAllowedFileExtentions()
         });
+
+        _app.UseRouting();
+        _app.UseEndpoints(endpoints => endpoints.MapFallbackToFile("/index.html"));
     }
 
     public string HttpsUri => _app.Urls.First(uri => uri.Contains("https"));

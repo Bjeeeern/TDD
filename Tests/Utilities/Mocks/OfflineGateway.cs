@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Core;
 
-namespace Tests.Utilities;
+namespace Tests.Utilities.Mocks;
 
 public class OfflineGateway : IGateway
 {
