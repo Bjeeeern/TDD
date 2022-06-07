@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Server;
 using Xunit;
 
-namespace Tests.TestSuites.Experiments;
+namespace Tests.TestSuites.LearningTests;
 
 public class Server
 {

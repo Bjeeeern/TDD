@@ -6,13 +6,16 @@ using Xunit;
 
 namespace Tests.Utilities.Fixtures;
 
-public class ServerClientFixture : IAsyncLifetime
+public class ServerAndClientFixture : IAsyncLifetime
 {
+    public string CertifiedServerUri = null!;
+    public IPage Page = null!;
+    
+    private WebApplicationRunner Server = null!;
     private IBrowser _browser = null!;
     private IBrowserContext _context = null!;
     private IPlaywright _playwright = null!;
-    public IPage Page = null!;
-    public WebApplicationRunner Server = null!;
+
 
     public async Task InitializeAsync()
     {
@@ -22,11 +25,12 @@ public class ServerClientFixture : IAsyncLifetime
             EnvironmentName = "Development",
             Args = new[] {"--urls", "https://127.0.0.1:0;http://127.0.0.1:0"}
         });
+        CertifiedServerUri = Server.HttpsUri.Replace("127.0.0.1", "localhost");
 
         _playwright = await Playwright.CreateAsync();
         _browser = await _playwright.Chromium.LaunchAsync();
         _context = await _browser.NewContextAsync();
-        _context.SetDefaultTimeout(2000);
+        _context.SetDefaultTimeout(Global.PlaywrightTimeout);
         Page = await _context.NewPageAsync();
     }
 

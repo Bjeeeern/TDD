@@ -3,6 +3,21 @@
 
 <p>Hello World!</p>
 
+<section class="border border-primary">
+    <div id="chat-history" class="border border-primary">
+        @foreach (var message in Messages)
+        {
+            <p class="message">
+                @message
+            </p>
+        }
+    </div>
+    <div id="message-input-area" class="border border-primary">
+        <button id="send-message-btn" class="btn btn-primary" @onclick="ProcessMessage"></button>
+        <input id="input-field" class="border border-3 border-dark" @bind="NewMessage"/>
+    </div>
+</section>
+
 <button id="about" class="btn btn-primary" @onclick="NavigateToAbout">
     About us
 </button>
@@ -12,6 +27,14 @@
     private void NavigateToAbout()
     {
         NavigationManager.NavigateTo("About");
+    }
+
+    public string? NewMessage { get; set; }
+    public List<string> Messages { get; } = new();
+
+    private void ProcessMessage()
+    {
+        Messages.Add(NewMessage);
     }
 
 }

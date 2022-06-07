@@ -1,28 +1,25 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Playwright;
-using Server;
 using Tests.Utilities.Fixtures;
 using Xunit;
 
-namespace Tests.TestSuites.Experiments;
+namespace Tests.TestSuites.LearningTests;
 
-public class Playwright : IClassFixture<ServerClientFixture>
+public class Playwright : IClassFixture<ServerAndClientFixture>
 {
+    private readonly string _certifiedServerUri;
     private readonly IPage _page;
-    private readonly WebApplicationRunner _server;
 
-    public Playwright(ServerClientFixture fixture)
+    public Playwright(ServerAndClientFixture fixture)
     {
         _page = fixture.Page;
-        _server = fixture.Server;
+        _certifiedServerUri = fixture.CertifiedServerUri;
     }
-
-    private string CertifiedServerUri => _server.HttpsUri.Replace("127.0.0.1", "localhost");
 
     [Fact]
     public async Task CanVisitTheServerIndexPage()
     {
-        var result = await _page.GotoAsync(CertifiedServerUri);
+        var result = await _page.GotoAsync(_certifiedServerUri);
 
         Assert.Equal(200, result.Status);
     }
@@ -30,7 +27,7 @@ public class Playwright : IClassFixture<ServerClientFixture>
     [Fact]
     public async Task CanFindAParagraphOnTheIndexPage()
     {
-        await _page.GotoAsync(CertifiedServerUri);
+        await _page.GotoAsync(_certifiedServerUri);
         await _page.WaitForSelectorAsync("main");
 
         Assert.True(await _page.IsVisibleAsync("p"));
@@ -38,12 +35,18 @@ public class Playwright : IClassFixture<ServerClientFixture>
     }
 
     [Fact]
-    public async Task CanNavigateToNonIndexPageAndRefresh()
+    public async Task CanFollowAnAboutPageLinkFromTheIndexPage()
     {
-        await _page.GotoAsync(CertifiedServerUri);
+        await _page.GotoAsync(_certifiedServerUri);
         await _page.ClickAsync("button#about");
 
         Assert.Contains("/about", _page.Url.ToLower());
+    }
+
+    [Fact]
+    public async Task CanRefreshTheAboutPage()
+    {
+        await _page.GotoAsync(_certifiedServerUri + "/about");
 
         var result = await _page.ReloadAsync();
 

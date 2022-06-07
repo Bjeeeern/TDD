@@ -4,7 +4,7 @@ using Core;
 using Xunit;
 using Assert = Tests.Utilities.AssertExtentions;
 
-namespace Tests.TestSuites.Production;
+namespace Tests.TestSuites.Production.UnitTests;
 
 public class Conversation
 {

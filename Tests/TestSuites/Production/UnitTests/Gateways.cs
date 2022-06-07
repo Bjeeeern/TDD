@@ -2,7 +2,7 @@
 using Tests.Utilities.Mocks;
 using Xunit;
 
-namespace Tests.TestSuites.Production;
+namespace Tests.TestSuites.Production.UnitTests;
 
 public class Gateways
 {
